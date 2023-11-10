@@ -12,7 +12,7 @@ from pathlib import Path
 import importlib.util
 from packaging import version
 from transformers import Trainer
-from transformers.modeling_utils import PreTrainedModel
+from transformers.modeling_utils import PreTrainedModel, unwrap_model
 from transformers.training_args import ParallelMode, TrainingArguments
 from transformers.utils import logging
 from transformers.trainer_utils import (
@@ -149,7 +149,7 @@ class CLTrainer(Trainer):
 
         # In all cases, including ddp/dp/deepspeed, self.model is always a reference to the model we
         # want to save.
-        assert _model_unwrap(model) is self.model, "internal model should be a reference to self.model"
+        assert unwrap_model(model) is self.model, "internal model should be a reference to self.model"
 
         # Determine the new best metric / best model checkpoint
         if metrics is not None and self.args.metric_for_best_model is not None:
