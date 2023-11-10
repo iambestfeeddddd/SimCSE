@@ -33,7 +33,7 @@ from transformers import (
 from transformers.tokenization_utils_base import BatchEncoding, PaddingStrategy, PreTrainedTokenizerBase
 from transformers.trainer_utils import is_main_process
 from transformers.data.data_collator import DataCollatorForLanguageModeling
-from transformers.file_utils import is_torch_available, is_torch_tpu_available
+from transformers.file_utils import cached_property, is_torch_available, is_torch_tpu_available
 from simcse.models import RobertaForCL, BertForCL
 from simcse.trainers import CLTrainer
 
@@ -181,7 +181,7 @@ class DataTrainingArguments:
         else:
             if self.train_file is not None:
                 extension = self.train_file.split(".")[-1]
-                assert extension in ["csv", "json", "txt", "parquet"], "`train_file` should be a csv, a json or a txt file."
+                assert extension in ["csv", "json", "txt"], "`train_file` should be a csv, a json or a txt file."
 
 
 @dataclass
@@ -194,7 +194,8 @@ class OurTrainingArguments(TrainingArguments):
         default=False,
         metadata={"help": "Evaluate transfer task dev sets (in validation)."}
     )
-    
+
+    @cached_property
     def _setup_devices(self) -> "torch.device":
         logger.info("PyTorch: setting up devices")
         if self.no_cuda:
