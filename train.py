@@ -181,8 +181,7 @@ class DataTrainingArguments:
         else:
             if self.train_file is not None:
                 extension = self.train_file.split(".")[-1]
-                assert extension in ["csv", "json", "txt", "parquet"], "`train_file` should be a 
-                , a json or a txt file."
+                assert extension in ["csv", "json", "txt", "parquet"], "`train_file` should be a csv, a json or a txt file."
 
 
 @dataclass
