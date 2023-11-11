@@ -7,8 +7,10 @@ from typing import Optional, Union, List, Dict, Tuple
 import torch
 import collections
 import random
+import pandas as pd
 
 from datasets import load_dataset
+from datasets import Dataset
 
 import transformers
 from transformers import (
@@ -305,9 +307,9 @@ def main():
     if extension == "txt":
         extension = "text"
     if extension == "csv":
-        datasets = load_dataset(extension, data_files=data_files, cache_dir="./data/", delimiter="\t" if "tsv" in data_args.train_file else ",")
+        datasets = Dataset.from_pandas(pd.read_csv(data_files["train"])).train_test_split(test_size=0.000001)
     else:
-        datasets = load_dataset(extension, data_files=data_files, cache_dir="./data/")
+        datasets = load_dataset(extension, data_files=data_files, cache_dir="./data/", delimiter=",")
 
     # See more about loading any type of standard or custom dataset (from files, python dict, pandas DataFrame, etc) at
     # https://huggingface.co/docs/datasets/loading_datasets.html.
